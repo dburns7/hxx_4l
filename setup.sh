@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cp ~/../mulhearn/Delphes-3.0.10.tar .
+#cp ~/../mulhearn/Delphes-3.0.10.tar .
 tar -xf Delphes-3.0.10.tar
 rm Delphes-3.0.10.tar
 cd Delphes-3.0.10/
