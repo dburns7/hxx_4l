@@ -6,6 +6,19 @@
 
 hxx_tree::hxx_tree()
 {
+   elec_pt     = new std::vector<double>;
+   elec_eta    = new std::vector<double>;
+   elec_phi    = new std::vector<double>;
+   elec_ch     = new std::vector<double>;
+   dielec_minv = new std::vector<double>;
+   //elec_P4     = new std::vector<TLorentzVector>;
+   
+   muon_pt     = new std::vector<double>;
+   muon_eta    = new std::vector<double>;
+   muon_phi    = new std::vector<double>;
+   muon_ch     = new std::vector<double>;
+   dimuon_minv = new std::vector<double>;   
+
    jet_pt     = new std::vector<double>;
    jet_eta    = new std::vector<double>;
    jet_phi    = new std::vector<double>;
@@ -14,6 +27,8 @@ hxx_tree::hxx_tree()
 }
 
 void hxx_tree::WriteTree(TTree * tree){   
+   
+   tree->Branch("testvar", &testvar);
    tree->Branch("sample", &sample);
    tree->Branch("weight", &weight);
    tree->Branch("lepton_flavor", &lepton_flavor);
@@ -54,11 +69,34 @@ void hxx_tree::WriteTree(TTree * tree){
    tree->Branch("jet_phi",    jet_phi);
    tree->Branch("jet_btag",   jet_btag);
    tree->Branch("jet_tautag", jet_tautag);
+
+   // elecs:
+   tree->Branch("elec_pt",     elec_pt);
+   tree->Branch("elec_eta",    elec_eta);
+   tree->Branch("elec_phi",    elec_phi);
+   tree->Branch("dielec_minv", dielec_minv);
+   tree->Branch("elec_ch",     elec_ch);
+   //tree->Branch("elec_P4",      elecP4); 
+
+   // muons:
+   tree->Branch("muon_pt",     muon_pt);
+   tree->Branch("muon_eta",    muon_eta);
+   tree->Branch("muon_phi",    muon_phi);
+   tree->Branch("muon_ch",     muon_ch);
+   tree->Branch("dimuon_minv", dimuon_minv);
+
+   // dilepton variables
+   tree->Branch("leadingm",    &leadingm);
+   tree->Branch("subleadingm", &subleadingm);
+
+   // four lepton variables
+   tree->Branch("total_minv",  &total_minv);
 }
       
 void hxx_tree::ReadTree(TTree * tree){
    tree->SetBranchAddress("l1_pt", &l1_pt     );
 
+   tree->SetBranchAddress("testvar", &testvar );
    tree->SetBranchAddress("sample", &sample   );
    tree->SetBranchAddress("weight", &weight   );
    tree->SetBranchAddress("lepton_flavor", &lepton_flavor );
@@ -98,12 +136,46 @@ void hxx_tree::ReadTree(TTree * tree){
    delete jet_eta;    jet_eta    = NULL;
    delete jet_btag;   jet_btag   = NULL;
    delete jet_tautag; jet_tautag = NULL;
+   
+   delete elec_pt;     elec_pt     = NULL;
+   delete elec_phi;    elec_phi    = NULL;
+   delete elec_eta;    elec_eta    = NULL;
+   delete elec_ch;     elec_ch     = NULL;
+   delete dielec_minv; dielec_minv = NULL;
+   //delete elec_P4;     elec_P4     = NULL;
 
+   delete muon_pt;     muon_pt     = NULL;
+   delete muon_phi;    muon_phi    = NULL;
+   delete muon_eta;    muon_eta    = NULL;
+   delete muon_ch;     muon_ch     = NULL;
+   delete dimuon_minv; dimuon_minv = NULL;
+   
    tree->SetBranchAddress("jet_pt",     &jet_pt     );
    tree->SetBranchAddress("jet_phi",    &jet_phi    );
    tree->SetBranchAddress("jet_eta",    &jet_eta    );
    tree->SetBranchAddress("jet_btag",   &jet_btag   );
    tree->SetBranchAddress("jet_tautag", &jet_tautag );
+   
+   tree->SetBranchAddress("elec_pt",     &elec_pt     );
+   tree->SetBranchAddress("elec_phi",    &elec_phi    );
+   tree->SetBranchAddress("elec_eta",    &elec_eta    );
+   tree->SetBranchAddress("dielec_minv", &dielec_minv );
+   tree->SetBranchAddress("elec_ch",     &elec_ch     );
+   //tree->SetBranchAddress("elec_P4",     &elec_P4     );
+
+   tree->SetBranchAddress("muon_pt",     &muon_pt     );
+   tree->SetBranchAddress("muon_phi",    &muon_phi    );
+   tree->SetBranchAddress("muon_eta",    &muon_eta    );
+   tree->SetBranchAddress("muon_ch",     &muon_ch     );
+   tree->SetBranchAddress("dimuon_minv", &dimuon_minv );
+
+   // dilepton variables
+   tree->SetBranchAddress("leadingm",    &leadingm    );
+   tree->SetBranchAddress("subleadingm", &subleadingm );
+
+   // four lepton variables
+   tree->SetBranchAddress("total_minv",  &total_minv  );
+
 }
 
 void hxx_tree::erase_jet(int i){
@@ -115,6 +187,7 @@ void hxx_tree::erase_jet(int i){
 }
 
 void hxx_tree::Clear(){
+   testvar  = 0;
    sample   = 0;
    weight   = 1;
    weight_met = 0;
@@ -144,4 +217,18 @@ void hxx_tree::Clear(){
    jet_phi->clear();
    jet_btag->clear();
    jet_tautag->clear();
+   elec_pt ->clear();
+   elec_eta->clear();
+   elec_phi->clear();
+   elec_ch->clear();
+   dielec_minv->clear();
+   //elec_P4->clear();
+   muon_pt-> clear();
+   muon_eta->clear();
+   muon_phi->clear();
+   muon_ch->clear();
+   dimuon_minv->clear();
+   leadingm    = 0;
+   subleadingm = 0;
+   total_minv  = 0;
 }

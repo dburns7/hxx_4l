@@ -141,6 +141,7 @@ int main(int argc, char *argv[])
       treeReader->ReadEntry(entry);
       
       data.Clear();
+      data.testvar = 2;
       data.sample = sample;
       data.weight = weight;
       data.weight_met = 0;
@@ -195,7 +196,118 @@ int main(int argc, char *argv[])
          data.jet_btag   ->push_back((int) jet->BTag);
          data.jet_tautag ->push_back((int) jet->TauTag);
       }      
+//-------------------------------------------ADDED-----------------------------
 
+      //single electron variables
+      for (int i=0; i<data.nelec; i++){
+         Electron * elec = (Electron*) branchElec->At(i);
+         data.elec_pt     ->push_back(elec->PT);
+         data.elec_eta    ->push_back(elec->Eta);
+         data.elec_phi    ->push_back(elec->Phi);
+         //data.elec_P4     ->push_back(elec->P4());
+         data.elec_ch     ->push_back(elec->Charge);
+      }   
+      
+      //single muon variables
+      for (int i=0; i<data.nmuon; i++){
+         Muon * muon = (Muon*) branchMuon->At(i);
+         data.muon_pt     ->push_back(muon->PT);
+         data.muon_eta    ->push_back(muon->Eta);
+         data.muon_phi    ->push_back(muon->Phi);
+         data.muon_ch     ->push_back(muon->Charge);
+      }
+
+      //dielectron variables
+      if(data.nelec > 1){
+         Electron * elec1 = (Electron*) branchElec->At(0);
+         Electron * elec2 = (Electron*) branchElec->At(1);
+         TLorentzVector elecP4 = (elec1->P4())+(elec2->P4());
+         data.dielec_minv ->push_back(elecP4.M());
+         if(data.nelec > 3){
+           Electron * elec3 = (Electron*) branchElec->At(2);
+           Electron * elec4 = (Electron*) branchElec->At(3);
+           TLorentzVector elecP42 = (elec3->P4())+(elec4->P4());
+           data.dielec_minv ->push_back(elecP42.M());
+         }
+      }
+      
+      //dimuon variables
+      if(data.nmuon > 1){
+         Muon * muon1 = (Muon*) branchMuon->At(0);
+         Muon * muon2 = (Muon*) branchMuon->At(1);
+         TLorentzVector muonP4 = (muon1->P4())+(muon2->P4());
+         data.dimuon_minv ->push_back(muonP4.M());
+         if(data.nmuon > 3){
+           Muon * muon3 = (Muon*) branchMuon->At(2);
+           Muon * muon4 = (Muon*) branchMuon->At(3);
+           TLorentzVector muonP42 = (muon3->P4())+(muon4->P4());
+           data.dimuon_minv ->push_back(muonP42.M());
+         }
+      }
+
+      //dilepton and 4lepton variables
+      Electron *elec1, *elec2, *elec3, *elec4;
+      Muon     *muon1, *muon2, *muon3, *muon4;
+      TLorentzVector dimuonP4, dimuonP4_2, dielecP4, dielecP4_2, totalP4;
+      double dimuonPT, dielecPT, totalPT; 
+      if(data.nelec == 2 && data.nmuon == 2){
+        weight *= 0.1*weight;
+        elec1 = (Electron *) branchElec->At(0);
+        elec2 = (Electron *) branchElec->At(1);
+        muon1   = (Muon *) branchMuon->At(0);
+        muon2   = (Muon *) branchMuon->At(1);
+        dimuonP4 = (muon1->P4())+(muon2->P4());
+        dielecP4 = (elec1->P4())+(elec2->P4());
+        totalP4 = dimuonP4 + dielecP4;
+        if(abs(dielecP4.M()-91.0) < abs(dimuonP4.M()-91.0)){
+          data.leadingm = dielecP4.M();
+          data.subleadingm = dimuonP4.M();
+        }
+        else{
+          data.leadingm = dimuonP4.M();
+          data.subleadingm = dielecP4.M();
+        }
+        data.total_minv = totalP4.M(); 
+      }
+      if(data.nelec == 4 && data.nmuon == 0){
+        weight *= 0.1*weight;
+        elec1 = (Electron *) branchElec->At(0);
+        elec2 = (Electron *) branchElec->At(1);
+        elec3 = (Electron *) branchElec->At(2);
+        elec4 = (Electron *) branchElec->At(3);
+        dielecP4 = (elec1->P4())+(elec2->P4());
+        dielecP4_2 = (elec3->P4())+(elec4->P4());
+        totalP4 = dielecP4 + dielecP4_2;
+        if(abs(dielecP4.M()-91.0) < abs(dielecP4_2.M()-91.0)){
+          data.leadingm = dielecP4.M();
+          data.subleadingm = dielecP4_2.M();
+        }
+        else{
+          data.leadingm = dielecP4_2.M();
+          data.subleadingm = dielecP4.M();
+        }
+        data.total_minv = totalP4.M();
+      }
+      if(data.nelec == 0 && data.nmuon == 4){
+        weight *= 0.1*weight;
+        muon1   = (Muon *) branchMuon->At(0);
+        muon2   = (Muon *) branchMuon->At(1);
+        muon3   = (Muon *) branchMuon->At(2);
+        muon4   = (Muon *) branchMuon->At(3);
+        dimuonP4 = (muon1->P4())+(muon2->P4());
+        dimuonP4_2 = (muon3->P4())+(muon4->P4());
+        totalP4 = dimuonP4 + dimuonP4_2;
+        if(abs(dimuonP4.M()-91.0) < abs(dimuonP4_2.M()-91.0)){
+          data.leadingm = dimuonP4.M();
+          data.subleadingm = dimuonP4_2.M();
+        }
+        else{
+          data.leadingm = dimuonP4_2.M();
+          data.subleadingm = dimuonP4.M();
+        }
+        data.total_minv = totalP4.M();
+      }
+//--------------------------------------------------------------------
 
       if (branchMET->GetEntries() > 0) {
          MissingET * met = (MissingET *) branchMET->At(0);

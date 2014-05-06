@@ -289,7 +289,7 @@ int main(int argc, char *argv[])
 
 
    double lumi = 300;
-   double met_cut = 250.0;
+   double met_cut = 75.0;
 
    if (mode_8tev){
      lumi = 20.0;

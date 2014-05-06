@@ -8,7 +8,8 @@ enum {LFMUMU=0, LFEMEM=1, LFEMMU=2}; // lpeton flavors
 class hxx_tree {
 public:
    hxx_tree();
-
+   
+   int testvar;
    int sample;
    double weight;  
    double weight_met; // allows for rethrowing MET...
@@ -37,6 +38,28 @@ public:
    double gl2_phi;
    double gmll;
 
+   // electron variables
+   std::vector<double>  * elec_pt;
+   std::vector<double>  * elec_eta;
+   std::vector<double>  * elec_phi;
+   std::vector<double>  * elec_ch;
+   std::vector<double>  * dielec_minv;
+   //std::vector<TLorentzVector> * elec_P4;
+   
+   // muon variables
+   std::vector<double>  * muon_pt;
+   std::vector<double>  * muon_eta;
+   std::vector<double>  * muon_phi;
+   std::vector<double>  * muon_ch;
+   std::vector<double>  * dimuon_minv;
+
+   // dilepton variables
+   double   leadingm;
+   double   subleadingm;
+
+   // four lepton variables
+   double   total_minv;
+  
    // jet variables: (these have to be pointers because ... you know ... ROOT.)
    std::vector<double>  * jet_pt;
    std::vector<double>  * jet_eta;
