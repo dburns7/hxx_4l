@@ -1,4 +1,5 @@
 Instructions for setting up and compiling hxx:
 
 source setup.sh
- 
+
+add symlink to data in /run 
