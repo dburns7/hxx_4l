@@ -143,6 +143,8 @@ int main(int argc, char *argv[])
       data.Clear();
       data.testvar = 2;
       data.sample = sample;
+  hs->Draw();
+  hs->Draw();
       data.weight = weight;
       data.weight_met = 0;
 
