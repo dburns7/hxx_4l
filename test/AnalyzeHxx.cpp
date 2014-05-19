@@ -289,11 +289,11 @@ int main(int argc, char *argv[])
 
 
    double lumi = 300;
-   double met_cut = 75.0;
+   double met_cut = 150.0;
 
    if (mode_8tev){
      lumi = 20.0;
-     met_cut = 250;
+     met_cut = 75;
      cout << "INFO:  settings for sqrt(s) = 8 TeV\n";
    } else {
      cout << "INFO:  settings for sqrt(s) = 14 TeV\n";
@@ -338,40 +338,40 @@ int main(int argc, char *argv[])
      cutflow.add_sample_name(3, "W,WW");
      cutflow.add_sample_name(4, "tt");     
    } else {
-     h0mll.add_sample(1,  "_zjj");
-     h0mll.add_sample(2,  "_zz_zw");
-     h0mll.add_sample(3,  "_ww");
-     h0mll.add_sample(4,  "_tt");
-     h0mll.add_sample(5,  "_hzz");
-     h0mll.add_sample(6,  "_zh");
-     h0mll.add_sample(7,  "_wh");
-     h0mll.add_sample(8,  "_wjjj");
+     h0mll.add_sample(1,  "_zz");
+     h0mll.add_sample(2,  "_hzz");
+     h0mll.add_sample(3,  "_zh_zvv");
+     h0mll.add_sample(4,  "_zh_zll");
+     h0mll.add_sample(5,  "_wh");
+     //h0mll.add_sample(6,  "_zh");
+     //h0mll.add_sample(7,  "_wh");
+     //h0mll.add_sample(8,  "_wjjj");
 
-     cutflow.add_sample_name(1, "Zjj");
-     cutflow.add_sample_name(2, "ZZ,ZW");
-     cutflow.add_sample_name(3, "WW");
-     cutflow.add_sample_name(4, "tt");
-     cutflow.add_sample_name(5, "HZZ");
-     cutflow.add_sample_name(6, "ZH");
-     cutflow.add_sample_name(7, "WH");
-     cutflow.add_sample_name(8, "W+jets");
+     cutflow.add_sample_name(1, "ZZ");
+     cutflow.add_sample_name(2, "HZZ");
+     cutflow.add_sample_name(3, "ZHvv");
+     cutflow.add_sample_name(4, "ZHll");
+     cutflow.add_sample_name(5, "WH");
+     //cutflow.add_sample_name(6, "ZH");
+     //cutflow.add_sample_name(7, "WH");
+     //cutflow.add_sample_name(8, "W+jets");
    }
 
 
 
 
    h0mll.add_sample(20,  "_hxx1");
-   h0mll.add_sample(21,  "_hxx10");
+   //h0mll.add_sample(21,  "_hxx10");
    h0mll.add_sample(22,  "_hxx100");
-   h0mll.add_sample(23,  "_hxx500");
-   h0mll.add_sample(24,  "_hxx1000");
+   //h0mll.add_sample(23,  "_hxx500");
+   //h0mll.add_sample(24,  "_hxx1000");
    
    cutflow.add_sample_name(20, "HXX1");
-   cutflow.add_sample_name(21, "HXX10");
+   //cutflow.add_sample_name(21, "HXX10");
    cutflow.add_sample_name(22, "HXX100");
-   cutflow.add_sample_name(23, "HXX500");
-   cutflow.add_sample_name(24, "HXX1000");
-
+   //cutflow.add_sample_name(23, "HXX500");
+   //cutflow.add_sample_name(24, "HXX1000");
+/*
 
    h0mll.add_sample(30,  "_hzp_100_1");
    h0mll.add_sample(31,  "_hzp_100_10");
@@ -417,11 +417,11 @@ int main(int argc, char *argv[])
    cutflow.add_sample_name(47, "HZPZP_1000_100");
    cutflow.add_sample_name(48, "HZPZP_1000_500");
    cutflow.add_sample_name(49, "HZPZP_1000_1000");
-   
+*/   
    
    h0mll.add_auto_write(aw);
 
-
+/*
    TH1F hfit_bkg("sample_1","",  100,0.0,300.0);
    TH1F hfit_sig20("signal20","",  100,0.0,300.0);
    TH1F hfit_sig21("signal21","",  100,0.0,300.0);
@@ -489,7 +489,7 @@ int main(int argc, char *argv[])
    histogram_manager h1drllb (new TH1F("h1drllb","", 81,  0.0,  8.1),     h0mll, aw);
    histogram_manager h1dphizz     (new TH1F("h1dphizz",     "", 100, 0.0, 3.2), h0mll, aw);
    histogram_manager h1dphizllmet (new TH1F("h1dphizllmet", "", 100, 0.0, 3.2), h0mll, aw);
-
+*/
    cout << "INFO: opening file: " << infile << "\n";
 
    TFile * file = new TFile(infile.c_str());
@@ -527,7 +527,7 @@ int main(int argc, char *argv[])
       
       tree->GetEntry(entry);
 
-
+/*
       int num_smear_event = num_smear;
       if (data.sample == 1) {
          num_smear_event = num_smear * 10;
@@ -569,8 +569,8 @@ int main(int argc, char *argv[])
       //if (data.l1_pt < 12.0) continue;
       //if (data.l2_pt < 12.0) continue;
 
-      if (data.l1_pt < 20.0) continue;
-      if (data.l2_pt < 15.0) continue;
+      //if (data.l1_pt < 20.0) continue;
+      //if (data.l2_pt < 15.0) continue;
 
       // prune jet list according to analysis selection:
       for (int i=0; i<data.jet_pt->size(); i++){
@@ -593,16 +593,16 @@ int main(int argc, char *argv[])
       }
 
       //preselection cuts:
-      if (data.jet_pt->size() < 2) continue;
-      if (data.nmuon + data.nelec > 2) continue;
+      //if (data.jet_pt->size() < 2) continue;
+      //if (data.nmuon + data.nelec > 2) continue;
       
 
       // checking 2-jet bin:
       //if (data.jet_pt->size() > 2) continue;
-
+*/
       cutflow.increment(0, data.sample, data.weight);      
 
-
+/*
       double mlj, pt_ja, dr_lla, dr_llb, mjj, mjj_off, mllj, mlljj, dphi_zz, zll_phi, x, y;
       best_mlj(data, mlj);
       kinematic_vars(data, pt_ja, dr_lla, dr_llb, mjj, mjj_off, mllj, mlljj, dphi_zz, zll_phi, x, y);
@@ -636,12 +636,12 @@ int main(int argc, char *argv[])
 
       // high MET test:
       //if (data.nopu_met < 100.0) continue;
-      
+*/      
       h0mll.Fill(data.sample, data.mll, data.weight);
 
 
 
-
+/*
       if (data.jet_pt->size() > 0) {
          h0j1pt  .Fill(data.sample, data.jet_pt ->at(0), data.weight);
          h0j1eta .Fill(data.sample, data.jet_eta->at(0), data.weight);
@@ -680,16 +680,16 @@ int main(int argc, char *argv[])
          h0jdphi      .Fill(data.sample, jet_dphi[i],     met_weight);
          h0dphizllmet .Fill(data.sample, zllmet_dphi[i] , met_weight);      
       }
-
+*/
 
 
       // Z-peak:
-      if (data.mll < 82)  continue;
-      if (data.mll > 98) continue;
+      //if (data.mll < 82)  continue;
+      //if (data.mll > 98) continue;
       cutflow.increment(1, data.sample, data.weight);
-      if (mllj > 124.0)  continue;
+      //if (mllj > 124.0)  continue;
       cutflow.increment(2, data.sample, data.weight);
-      if (dphi_zz > 2.25)  continue;
+      //if (dphi_zz > 2.25)  continue;
       cutflow.increment(3, data.sample, data.weight);
       //if (mlj > 60.0)  continue;
       // These two cuts are applied in MET loop... 0 = no cut
@@ -702,7 +702,7 @@ int main(int argc, char *argv[])
 
 
 
-
+/*
       h1njet.  Fill(data.sample, data.jet_pt->size(), data.weight);
       h1mll.   Fill(data.sample, data.mll,            data.weight);
       h1mjj.   Fill(data.sample, mjj,                 data.weight);      
@@ -745,6 +745,7 @@ int main(int argc, char *argv[])
 	 if (met[i] > met_cut)	 
 	   cutflow.increment(4, data.sample, met_weight);
       }      
+*/
    }
    cout << "\n";
 
@@ -771,7 +772,7 @@ int main(int argc, char *argv[])
 
    cout << "Cutflow:  Stage 4 (after MET cut) \n";
    cutflow.print(4);
-
+/*
    cout << "Fit Histogram Summary:  \n";
    double SIGTOT = lumi * 149.8;
    hfit_sig20.Scale(1.0/SIGTOT);
@@ -838,7 +839,7 @@ int main(int argc, char *argv[])
    h->Write();
    hfit_bkg.Write();
    f->Close();
-
+*/
 
 
 }
